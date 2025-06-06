@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘塔罗占卜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="voice.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题图片 -->
+        <img src="assets/image/title 2.png" alt="神秘塔罗占卜" style="display:block;margin:0 auto 2.5rem auto;max-width:480px;width:90%;height:auto;">
+        <div class="mic-group">
+            <button class="mic-button" id="micButton">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <p class="instruction">点击麦克风开始诉说你的问题</p>
+        </div>
+        <!-- 仪式感输入框 -->
+        <input type="text" class="question-input" id="questionInput" placeholder="你想问什么问题呢？" autocomplete="off">
+        <button class="action-button" id="startButton" onclick="window.location.href='draw.html'" style="margin-top:2.5rem;">开始占卜</button>
+    </div>
+
+    <script src="bgm.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const micButton = document.getElementById('micButton');
+            const questionInput = document.getElementById('questionInput');
+            const startButton = document.getElementById('startButton');
+
+            // 文字输入处理
+            questionInput.addEventListener('input', function() {
+                const text = this.value.trim();
+                startButton.disabled = !text;
+                if (text) {
+                    localStorage.setItem('userQuestion', text);
+                }
+            });
+
+            // 语音识别
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'zh-CN';
+
+                micButton.addEventListener('click', function() {
+                    recognition.start();
+                    micButton.classList.add('listening');
+                });
+
+                recognition.onresult = function(event) {
+                    const text = event.results[0][0].transcript;
+                    questionInput.value = text;
+                    startButton.disabled = false;
+                    micButton.classList.remove('listening');
+                    localStorage.setItem('userQuestion', text);
+                };
+
+                recognition.onend = function() {
+                    micButton.classList.remove('listening');
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    micButton.classList.remove('listening');
+                };
+            } else {
+                micButton.style.display = 'none';
+            }
+
+            // 初始化按钮状态
+            startButton.disabled = true;
+        });
+    </script>
+</body>
+</html> 

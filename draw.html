@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌占卜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="draw.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题图片 -->
+        <img src="assets/image/title 2.png" alt="神秘塔罗占卜" style="display:block;margin:0 auto 2.5rem auto;max-width:480px;width:90%;height:auto;">
+        <p class="question" id="userQuestion"></p>
+        <div class="cards-container" id="cardsContainer">
+            <!-- 卡片将通过JavaScript动态添加 -->
+        </div>
+        <p class="progress-text" id="progressText">请抽取第一张牌</p>
+        <div class="button-container">
+            <button id="draw-button" class="action-button">抽取塔罗牌</button>
+            <button id="reading-button" class="action-button" onclick="startReading()">开始解牌</button>
+        </div>
+    </div>
+    <script>
+    // 78张标准塔罗牌数据（图片路径已与实际文件名对齐）
+    const tarotCards = [
+        // 大阿尔卡那
+        { name: "愚者", image: "assets/cards/00-fool.jpg", prediction: "新的开始，冒险，自发性" },
+        { name: "魔术师", image: "assets/cards/01-magician.jpg", prediction: "创造力，技能，意志力" },
+        { name: "女祭司", image: "assets/cards/02-high-priestess.jpg", prediction: "直觉，神秘，潜意识" },
+        { name: "女皇", image: "assets/cards/03-empress.jpg", prediction: "丰饶，母性，创造力" },
+        { name: "皇帝", image: "assets/cards/04-emperor.jpg", prediction: "权威，结构，控制" },
+        { name: "教皇", image: "assets/cards/05-hierophant.jpg", prediction: "传统，精神指导，道德" },
+        { name: "恋人", image: "assets/cards/06-lovers.jpg", prediction: "爱情，和谐，关系" },
+        { name: "战车", image: "assets/cards/07-chariot.jpg", prediction: "胜利，意志力，决心" },
+        { name: "力量", image: "assets/cards/08-strength.jpg", prediction: "勇气，说服力，影响" },
+        { name: "隐士", image: "assets/cards/09-hermit.jpg", prediction: "内省，寻找内在真理" },
+        { name: "命运之轮", image: "assets/cards/10-wheel-of-fortune.jpg", prediction: "命运，转折点，机会" },
+        { name: "正义", image: "assets/cards/11-justice.jpg", prediction: "正义，真理，诚实" },
+        { name: "倒吊人", image: "assets/cards/12-hanged-man.jpg", prediction: "牺牲，释放，新的视角" },
+        { name: "死神", image: "assets/cards/13-death.jpg", prediction: "结束，改变，转变" },
+        { name: "节制", image: "assets/cards/14-temperance.jpg", prediction: "平衡，适度，耐心" },
+        { name: "恶魔", image: "assets/cards/15-devil.jpg", prediction: "束缚，物质主义，欲望" },
+        { name: "高塔", image: "assets/cards/16-tower.jpg", prediction: "突然的变化，混乱，启示" },
+        { name: "星星", image: "assets/cards/17-star.jpg", prediction: "希望，信心，目的" },
+        { name: "月亮", image: "assets/cards/18-moon.jpg", prediction: "幻想，恐惧，潜意识" },
+        { name: "太阳", image: "assets/cards/19-sun.jpg", prediction: "喜悦，活力，成功" },
+        { name: "审判", image: "assets/cards/20-judgement.jpg", prediction: "重生，内在呼唤，释放" },
+        { name: "世界", image: "assets/cards/21-world.jpg", prediction: "完成，整合，成就" },
+        // 权杖A-K
+        { name: "权杖一", image: "assets/cards/wands-01.jpg", prediction: "新机会，灵感，创造力" },
+        { name: "权杖二", image: "assets/cards/wands-02.jpg", prediction: "计划，未来，选择" },
+        { name: "权杖三", image: "assets/cards/wands-03.jpg", prediction: "远见，拓展，探索" },
+        { name: "权杖四", image: "assets/cards/wands-04.jpg", prediction: "庆祝，家庭，团结" },
+        { name: "权杖五", image: "assets/cards/wands-05.jpg", prediction: "竞争，冲突，挑战" },
+        { name: "权杖六", image: "assets/cards/wands-06.jpg", prediction: "胜利，认可，进步" },
+        { name: "权杖七", image: "assets/cards/wands-07.jpg", prediction: "防御，坚持，勇气" },
+        { name: "权杖八", image: "assets/cards/wands-08.jpg", prediction: "快速，行动，变化" },
+        { name: "权杖九", image: "assets/cards/wands-09.jpg", prediction: "坚韧，考验，恢复" },
+        { name: "权杖十", image: "assets/cards/wands-10.jpg", prediction: "负担，压力，责任" },
+        { name: "权杖侍者", image: "assets/cards/wands-page.jpg", prediction: "探索，热情，消息" },
+        { name: "权杖骑士", image: "assets/cards/wands-knight.jpg", prediction: "冒险，能量，冲动" },
+        { name: "权杖皇后", image: "assets/cards/wands-queen.jpg", prediction: "自信，独立，魅力" },
+        { name: "权杖国王", image: "assets/cards/wands-king.jpg", prediction: "领导，远见，激励" },
+        // 圣杯A-K
+        { name: "圣杯一", image: "assets/cards/cups-01.jpg", prediction: "新感情，灵感，满足" },
+        { name: "圣杯二", image: "assets/cards/cups-02.jpg", prediction: "伙伴，和谐，吸引" },
+        { name: "圣杯三", image: "assets/cards/cups-03.jpg", prediction: "友谊，庆祝，社交" },
+        { name: "圣杯四", image: "assets/cards/cups-04.jpg", prediction: "沉思，不满，反思" },
+        { name: "圣杯五", image: "assets/cards/cups-05.jpg", prediction: "失落，遗憾，情绪" },
+        { name: "圣杯六", image: "assets/cards/cups-06.jpg", prediction: "回忆，童年，怀旧" },
+        { name: "圣杯七", image: "assets/cards/cups-07.jpg", prediction: "幻想，选择，诱惑" },
+        { name: "圣杯八", image: "assets/cards/cups-08.jpg", prediction: "放弃，追寻，转变" },
+        { name: "圣杯九", image: "assets/cards/cups-09.jpg", prediction: "满足，愿望成真，享受" },
+        { name: "圣杯十", image: "assets/cards/cups-10.jpg", prediction: "幸福，家庭，和谐" },
+        { name: "圣杯侍者", image: "assets/cards/cups-page.jpg", prediction: "创造力，直觉，消息" },
+        { name: "圣杯骑士", image: "assets/cards/cups-knight.jpg", prediction: "浪漫，理想，追求" },
+        { name: "圣杯皇后", image: "assets/cards/cups-queen.jpg", prediction: "关怀，情感，理解" },
+        { name: "圣杯国王", image: "assets/cards/cups-king.jpg", prediction: "平衡，智慧，情感掌控" },
+        // 宝剑A-K
+        { name: "宝剑一", image: "assets/cards/swords-01.jpg", prediction: "新想法，真理，突破" },
+        { name: "宝剑二", image: "assets/cards/swords-02.jpg", prediction: "抉择，平衡，犹豫" },
+        { name: "宝剑三", image: "assets/cards/swords-03.jpg", prediction: "心碎，痛苦，分离" },
+        { name: "宝剑四", image: "assets/cards/swords-04.jpg", prediction: "休息，恢复，反思" },
+        { name: "宝剑五", image: "assets/cards/swords-05.jpg", prediction: "冲突，失败，自尊" },
+        { name: "宝剑六", image: "assets/cards/swords-06.jpg", prediction: "过渡，远行，疗愈" },
+        { name: "宝剑七", image: "assets/cards/swords-07.jpg", prediction: "策略，隐瞒，机智" },
+        { name: "宝剑八", image: "assets/cards/swords-08.jpg", prediction: "束缚，限制，困境" },
+        { name: "宝剑九", image: "assets/cards/swords-09.jpg", prediction: "焦虑，担忧，噩梦" },
+        { name: "宝剑十", image: "assets/cards/swords-10.jpg", prediction: "结束，背叛，苦难" },
+        { name: "宝剑侍者", image: "assets/cards/swords-page.jpg", prediction: "好奇，警觉，消息" },
+        { name: "宝剑骑士", image: "assets/cards/swords-knight.jpg", prediction: "果断，行动，冲动" },
+        { name: "宝剑皇后", image: "assets/cards/swords-queen.jpg", prediction: "独立，洞察，理性" },
+        { name: "宝剑国王", image: "assets/cards/swords-king.jpg", prediction: "权威，智慧，判断" },
+        // 钱币A-K
+        { name: "钱币一", image: "assets/cards/pentacles-01.jpg", prediction: "新机会，财富，潜力" },
+        { name: "钱币二", image: "assets/cards/pentacles-02.jpg", prediction: "平衡，适应，灵活" },
+        { name: "钱币三", image: "assets/cards/pentacles-03.jpg", prediction: "协作，技能，成长" },
+        { name: "钱币四", image: "assets/cards/pentacles-04.jpg", prediction: "保守，安全，控制" },
+        { name: "钱币五", image: "assets/cards/pentacles-05.jpg", prediction: "匮乏，困难，支持" },
+        { name: "钱币六", image: "assets/cards/pentacles-06.jpg", prediction: "施与，分享，慷慨" },
+        { name: "钱币七", image: "assets/cards/pentacles-07.jpg", prediction: "耐心，评估，等待" },
+        { name: "钱币八", image: "assets/cards/pentacles-08.jpg", prediction: "勤奋，专注，技能提升" },
+        { name: "钱币九", image: "assets/cards/pentacles-09.jpg", prediction: "成就，独立，享受" },
+        { name: "钱币十", image: "assets/cards/pentacles-10.jpg", prediction: "财富，家族，传承" },
+        { name: "钱币侍者", image: "assets/cards/pentacles-page.jpg", prediction: "学习，机会，成长" },
+        { name: "钱币骑士", image: "assets/cards/pentacles-knight.jpg", prediction: "责任，耐心，实际" },
+        { name: "钱币皇后", image: "assets/cards/pentacles-queen.jpg", prediction: "关怀，物质，安全感" },
+        { name: "钱币国王", image: "assets/cards/pentacles-king.jpg", prediction: "富足，稳定，慷慨" }
+    ];
+    const positions = ["过去", "现在", "未来"];
+
+    // 获取DOM
+    const userQuestion = localStorage.getItem('userQuestion') || '';
+    document.getElementById('userQuestion').textContent = userQuestion ? `「${userQuestion}」` : '';
+    const cardsContainer = document.getElementById('cardsContainer');
+    const progressText = document.getElementById('progressText');
+    const drawButton = document.getElementById('draw-button');
+    const readingButton = document.getElementById('reading-button');
+
+    // 初始化三张牌的容器
+    cardsContainer.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card-container';
+        cardDiv.innerHTML = `
+            <div class="card-img-wrap">
+                <div class="card-front">
+                    <i class="fas fa-question"></i>
+                </div>
+                <img class="tarot-card card-back" src="assets/cards/card.jpg" alt="塔罗牌">
+            </div>
+            <div class="card-info">
+                <h2 class="card-name">请抽一张牌</h2>
+                <p class="card-position">${positions[i]}</p>
+                <span class="card-status">等待抽取</span>
+            </div>
+        `;
+        cardsContainer.appendChild(cardDiv);
+    }
+
+    let drawnCards = [];
+    let currentCardIndex = 0;
+
+    drawButton.addEventListener('click', function() {
+        if (currentCardIndex >= 3) return;
+        // 保证不重复抽牌
+        let availableCards = tarotCards.filter(card => !drawnCards.some(d => d.name === card.name));
+        if (availableCards.length === 0) return;
+        const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+        const isReversed = Math.random() > 0.5;
+
+        const cardDiv = cardsContainer.children[currentCardIndex];
+        const cardBack = cardDiv.querySelector('.card-back');
+        const cardName = cardDiv.querySelector('.card-name');
+        const cardStatus = cardDiv.querySelector('.card-status');
+
+        // 设置卡牌图片和状态
+        cardBack.src = randomCard.image;
+        if (isReversed) {
+            cardDiv.classList.add('reversed');
+            cardBack.style.transform = 'rotate(180deg)';
+        } else {
+            cardDiv.classList.remove('reversed');
+            cardBack.style.transform = 'rotate(0deg)';
+        }
+
+        // 显示卡牌
+        cardDiv.classList.add('show');
+
+        // 延迟翻转卡牌
+        setTimeout(() => {
+            cardDiv.classList.add('flipped');
+            cardName.textContent = randomCard.name;
+            cardStatus.textContent = isReversed ? '逆位' : '正位';
+        }, 500);
+
+        drawnCards.push({
+            ...randomCard,
+            reversed: isReversed,
+            position: positions[currentCardIndex]
+        });
+
+        currentCardIndex++;
+
+        if (currentCardIndex < 3) {
+            progressText.textContent = `请抽取第${currentCardIndex + 1}张牌`;
+        } else {
+            progressText.textContent = '✨ 所有牌已抽取完毕 ✨';
+            drawButton.disabled = true;
+            readingButton.style.display = 'block';
+        }
+
+        // Store all drawn cards
+        localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
+    });
+
+    function startReading() {
+        // 跳转到解牌页
+        window.location.href = 'reading.html';
+    }
+    </script>
+    <script src="bgm.js"></script>
+</body>
+</html>
+ 

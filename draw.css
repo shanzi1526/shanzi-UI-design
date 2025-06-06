@@ -1,0 +1,160 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('assets/image/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    color: #fff;
+    position: relative;
+}
+.container {
+    text-align: center;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 800px;
+    width: 90%;
+    margin: 60px auto 0 auto;
+    position: relative;
+    z-index: 1;
+}
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin: 2.5rem auto 0 auto;
+    width: 460px;
+    min-width: 320px;
+    max-width: 98vw;
+    padding: 0;
+}
+.card-container {
+    width: 140px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(-24px);
+    transition: transform 0.5s cubic-bezier(.4,1.6,.6,1), opacity 0.5s;
+    flex-shrink: 0;
+}
+.card-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.card-img-wrap {
+    width: 140px;
+    height: 240px;
+    position: relative;
+    perspective: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-front, .card-back, .tarot-card {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(26,26,46,0.10);
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+}
+.card-front {
+    background: #e6dfce;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #1a1a2e;
+    border-radius: 16px;
+    transform: rotateY(0deg);
+    position: absolute;
+    top: 0; left: 0;
+}
+.card-back {
+    transform: rotateY(180deg);
+    position: absolute;
+    top: 0; left: 0;
+}
+.card-container.flipped .card-front {
+    transform: rotateY(180deg);
+}
+.card-container.flipped .card-back {
+    transform: rotateY(0deg);
+}
+.card-info {
+    background: #e6dfce;
+    color: #1a1a2e;
+    padding: 10px 6px 12px 6px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(26,26,46,0.08);
+    font-size: 1rem;
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+    min-height: 60px;
+    position: static;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    z-index: 1;
+}
+.card-name {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+.card-position, .card-status {
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    margin-bottom: 2px;
+}
+.button-container {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 3.5rem auto 0 auto;
+}
+.action-button {
+    background: #e6dfce;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    padding: 1rem 2.5rem;
+    box-shadow: 0 2px 12px rgba(230, 223, 206, 0.10);
+    transition: box-shadow 0.3s, transform 0.3s;
+    opacity: 0.9;
+    pointer-events: none;
+}
+.action-button:not(:disabled) {
+    opacity: 1;
+    pointer-events: auto;
+}
+.action-button:not(:disabled):hover {
+    box-shadow: 0 5px 20px rgba(230, 223, 206, 0.18);
+    transform: translateY(-2px) scale(1.04);
+}
+.progress-text {
+    color: #e6dfce;
+    margin: 1.5rem auto 0.5rem auto;
+    font-size: 1.1rem;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+}
+@media (max-width: 700px) {
+    .cards-container {
+        gap: 0.7rem;
+        width: 98vw;
+        min-width: 0;
+    }
+    .card-container {
+        width: 90px;
+        height: 150px;
+    }
+} 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命运召唤</title>
+    <link rel="stylesheet" href="cover.css">
+</head>
+<body>
+    <div class="cover-page">
+        <div class="container">
+            <!-- 背景图层 -->
+            <img src="assets/image/cover.png" alt="背景" class="background">
+            <div class="bg-mask"></div>
+            
+            <!-- 魔法阵图层 -->
+            <img src="assets/image/magic array.png" alt="魔法阵" class="magic-array">
+            
+            <!-- 标题图层 -->
+            <img src="assets/image/title.png" alt="标题" class="title">
+            
+            <!-- 进入按钮 -->
+            <a href="index.html" class="enter-button">进入命运仪式</a>
+            <!-- 音乐控制按钮和音频 -->
+            <button class="music-toggle" id="coverMusicBtn" aria-label="背景音乐开关">
+                <span id="coverMusicIcon">&#127925;</span>
+            </button>
+            <audio id="coverBgm" src="assets/bgm/cover-bgm.mp3" loop preload="auto"></audio>
+        </div>
+    </div>
+    <script src="cover-bgm.js"></script>
+</body>
+</html> 

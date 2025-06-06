@@ -1,0 +1,91 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('assets/image/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    color: #fff;
+    position: relative;
+}
+.container {
+    text-align: center;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 900px;
+    width: 95%;
+    margin: 60px auto 0 auto;
+    position: relative;
+    z-index: 1;
+}
+.cards-show {
+    display: flex;
+    justify-content: center;
+    gap: 2.2rem;
+    margin-bottom: 2.5rem;
+}
+.card-magic {
+    background: #e6dfce;
+    border-radius: 28px;
+    box-shadow: 0 4px 24px rgba(26,26,46,0.10);
+    padding: 22px 14px 18px 14px;
+    width: 180px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.card-magic img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 18px;
+    margin-bottom: 12px;
+}
+.card-magic .card-name {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+.card-magic .card-position {
+    font-size: 1rem;
+    color: #1a1a2e;
+    margin-bottom: 2px;
+}
+.card-magic .card-status {
+    font-size: 0.95rem;
+    color: #1a1a2e;
+}
+.reading-magic {
+    background: #e6dfce;
+    border-radius: 24px;
+    box-shadow: 0 2px 16px rgba(26,26,46,0.10);
+    color: #1a1a2e;
+    padding: 2rem;
+    margin: 2.5rem 0;
+    font-size: 1.08rem;
+    line-height: 1.8;
+    white-space: pre-line;
+    text-align: left;
+}
+.reading-magic .loading {
+    color: #b8b2a3;
+}
+.action-button {
+    background: #e6dfce;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    padding: 1rem 2.5rem;
+    box-shadow: 0 2px 12px rgba(230, 223, 206, 0.10);
+    transition: box-shadow 0.3s, transform 0.3s;
+    opacity: 0.9;
+    pointer-events: none;
+}
+.action-button:not(:disabled) {
+    opacity: 1;
+    pointer-events: auto;
+}
+.action-button:not(:disabled):hover {
+    box-shadow: 0 5px 20px rgba(230, 223, 206, 0.18);
+    transform: translateY(-2px) scale(1.04);
+} 
