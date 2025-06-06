@@ -135,4 +135,41 @@ html, body {
         width: 177.78vh;
         height: 100vh;
     }
+}
+@media (max-width: 600px) {
+    .cover-page .magic-array {
+        width: 90vw;
+        top: 38%;
+    }
+    .cover-page .title {
+        width: 90vw;
+        top: 14%;
+    }
+}
+@media (max-width: 900px) {
+    .cover-page .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+    }
+    .cover-page .title,
+    .cover-page .magic-array {
+        position: static;
+        margin: 0 auto;
+        display: block;
+        width: 80vw;
+        max-width: 90vw;
+        height: auto;
+    }
+    .cover-page .title {
+        margin-bottom: 2vh;
+        margin-top: 0;
+    }
+    .cover-page .magic-array {
+        margin-bottom: 2vh;
+    }
 } 
