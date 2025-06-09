@@ -62,7 +62,7 @@ html, body {
     left: 50%;
     bottom: 40px;
     transform: translateX(-50%);
-    z-index: 4;
+    z-index: 100;
     padding: 15px 30px;
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
@@ -75,7 +75,7 @@ html, body {
 .cover-page .enter-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
-    transform: scale(1.05);
+    transform: translateX(-50%) scale(1.05);
 }
 .cover-page .music-toggle {
     position: absolute;

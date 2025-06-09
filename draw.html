@@ -21,7 +21,20 @@
             <button id="reading-button" class="action-button" onclick="startReading()">开始解牌</button>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="gesture-control.js"></script>
+    <script>window.addEventListener('DOMContentLoaded',()=>{GestureControl.enable();});</script>
     <script>
+    // 播放音效的辅助函数
+    function playAudio(filename) {
+        const audio = new Audio(`./assets/bgm/${filename}.mp3`);
+        audio.play().catch(e => console.error("Error playing audio:", e));
+    }
+
+    if (document.referrer.indexOf('draw-animation.html') === -1) {
+        localStorage.removeItem('tarotAnimationDone');
+    }
     // 78张标准塔罗牌数据（图片路径已与实际文件名对齐）
     const tarotCards = [
         // 大阿尔卡那
@@ -142,21 +155,28 @@
     let drawnCards = [];
     let currentCardIndex = 0;
 
-    drawButton.addEventListener('click', function() {
-        if (currentCardIndex >= 3) return;
-        // 保证不重复抽牌
-        let availableCards = tarotCards.filter(card => !drawnCards.some(d => d.name === card.name));
-        if (availableCards.length === 0) return;
-        const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+    function autoDrawThreeCards() {
+        drawnCards = [];
+        let availableCards = tarotCards.slice();
+        let i = 0;
+        function revealNext() {
+            if (i >= 3) {
+                currentCardIndex = 3;
+                progressText.textContent = '✨ 所有牌已抽取完毕 ✨';
+                drawButton.disabled = true;
+                drawButton.textContent = '已抽取';
+                readingButton.style.display = 'block';
+                localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
+                return;
+            }
+            const idx = Math.floor(Math.random() * availableCards.length);
+            const card = availableCards.splice(idx, 1)[0];
         const isReversed = Math.random() > 0.5;
-
-        const cardDiv = cardsContainer.children[currentCardIndex];
+            const cardDiv = cardsContainer.children[i];
         const cardBack = cardDiv.querySelector('.card-back');
         const cardName = cardDiv.querySelector('.card-name');
         const cardStatus = cardDiv.querySelector('.card-status');
-
-        // 设置卡牌图片和状态
-        cardBack.src = randomCard.image;
+            cardBack.src = card.image;
         if (isReversed) {
             cardDiv.classList.add('reversed');
             cardBack.style.transform = 'rotate(180deg)';
@@ -164,35 +184,36 @@
             cardDiv.classList.remove('reversed');
             cardBack.style.transform = 'rotate(0deg)';
         }
-
-        // 显示卡牌
         cardDiv.classList.add('show');
-
-        // 延迟翻转卡牌
         setTimeout(() => {
             cardDiv.classList.add('flipped');
-            cardName.textContent = randomCard.name;
+            playAudio('Select'); // 播放 Select 音效
+                cardName.textContent = card.name;
             cardStatus.textContent = isReversed ? '逆位' : '正位';
+                drawnCards.push({ ...card, reversed: isReversed, position: positions[i] });
+                i++;
+                if (i < 3) {
+                    progressText.textContent = `请抽取第${i + 1}张牌`;
+                }
+                setTimeout(revealNext, 700);
         }, 500);
-
-        drawnCards.push({
-            ...randomCard,
-            reversed: isReversed,
-            position: positions[currentCardIndex]
-        });
-
-        currentCardIndex++;
-
-        if (currentCardIndex < 3) {
-            progressText.textContent = `请抽取第${currentCardIndex + 1}张牌`;
-        } else {
-            progressText.textContent = '✨ 所有牌已抽取完毕 ✨';
-            drawButton.disabled = true;
-            readingButton.style.display = 'block';
         }
+        revealNext();
+    }
 
-        // Store all drawn cards
-        localStorage.setItem('drawnCards', JSON.stringify(drawnCards));
+    // 页面加载时判断是否需要自动抽取
+    if (localStorage.getItem('tarotAnimationDone') === 'true') {
+        setTimeout(() => {
+            autoDrawThreeCards();
+            localStorage.removeItem('tarotAnimationDone');
+        }, 300); // 延迟以保证DOM渲染
+    }
+
+    drawButton.addEventListener('click', function() {
+        if (currentCardIndex >= 3) return;
+        // 跳转到动画界面
+        localStorage.removeItem('tarotAnimationDone'); // 防止误触发
+        window.location.href = 'draw-animation.html';
     });
 
     function startReading() {

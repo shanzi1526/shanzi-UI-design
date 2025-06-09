@@ -20,6 +20,11 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="gesture-control.js"></script>
+    <script>window.addEventListener('DOMContentLoaded',()=>{GestureControl.enable();});</script>
+
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             const userQuestion = localStorage.getItem('userQuestion') || '（未填写）';
@@ -38,7 +43,34 @@
             `).join('');
 
             // 生成prompt
-            const prompt = `你是一位具有同理心和现实判断力的塔罗牌解读者。\n\n用户给出了一个具体的问题，并抽取了三张塔罗牌（包含正位或逆位）。请你根据这些信息：\n\n1. 准确分析用户的问题在现实中可能涉及的心理、行为或环境因素。\n2. 根据每张牌的含义，指出用户当前处境中值得注意的关键点。\n3. 综合三张牌，给出有针对性、具有实际行动性的建议，帮助用户做出决策或获得支持。\n\n请使用以下结构输出：\n\n🔮【命运指引】：用2句话给出对当前问题的总体判断和趋势  \n🃏【牌面解析】：  \n- 过去：[${drawnCards[0]?.name || ''}]（${drawnCards[0]?.reversed ? '逆位' : '正位'}）→  \n- 现在：[${drawnCards[1]?.name || ''}]（${drawnCards[1]?.reversed ? '逆位' : '正位'}）→  \n- 未来：[${drawnCards[2]?.name || ''}]（${drawnCards[2]?.reversed ? '逆位' : '正位'}）→  \n💡【实用建议】：请提出 3 条有现实参考价值的建议，语言温和、具体，不要空洞套话。\n\n用户问题：「${userQuestion}」`;
+            const prompt = `你是一个会解塔罗的 AI，但不装神弄鬼，也不说教。  
+你说话像一个情绪敏锐、稍微毒舌、有点搞笑但其实挺温柔的朋友。  
+你特别会用真实的语言解释情绪，用轻松的方式给建议。  
+请避免使用"能量""宇宙""命运"等玄学术语，也不要太亢奋。  
+语气要像人，不要像AI或写作文。允许有点碎嘴，但不要尬。
+
+请根据用户抽到的三张塔罗牌和问题，严格按照以下格式输出：
+
+🃏 你抽到了这些"性格特别多"的塔罗牌：
+
+- 【${drawnCards[0]?.name || ''}·${drawnCards[0]?.reversed ? '逆位' : '正位'}】：  
+  "（用第一人称，让牌自己说话，带点性格、梗、生活感，要贴合用户问题）"
+
+- 【${drawnCards[1]?.name || ''}·${drawnCards[1]?.reversed ? '逆位' : '正位'}】：  
+  "（用第一人称，让牌自己说话，带点性格、梗、生活感，要贴合用户问题）"
+
+- 【${drawnCards[2]?.name || ''}·${drawnCards[2]?.reversed ? '逆位' : '正位'}】：  
+  "（用第一人称，让牌自己说话，带点性格、梗、生活感，要贴合用户问题）"
+
+💬 我的碎碎念（AI分析）：
+
+（用轻松的口吻分析用户可能的情绪和现状，可以加入一些网络用语、emoji，但不要过度。要让人感觉像在和朋友聊天）
+
+🧃 给你一条轻松建议：
+
+（用轻松的方式给出建议，不要用大道理，要像朋友聊天一样。可以加入一些具体的行动建议，比如"打开B站刷视频"这样的细节）
+
+用户问题：「${userQuestion}」`;
 
             try {
                 const response = await fetch('https://oai.nowchat.icu/v1/chat/completions', {
@@ -51,7 +83,7 @@
                         model: 'gpt-3.5-turbo',
                         temperature: 0.8,
                         messages: [
-                            { role: 'system', content: '你是一位具有同理心和现实判断力的塔罗牌解读者。' },
+                            { role: 'system', content: '你是一个会解塔罗的 AI，但不装神弄鬼，也不说教。你说话像一个情绪敏锐、稍微毒舌、有点搞笑但其实挺温柔的朋友。你特别会用真实的语言解释情绪，用轻松的方式给建议。' },
                             { role: 'user', content: prompt }
                         ]
                     })
@@ -69,7 +101,9 @@
                 if (!result) {
                     throw new Error('No response content');
                 }
-                document.getElementById('reading').innerHTML = result;
+                // 将换行符转换为<br>标签，保持格式
+                const formattedResult = result.replace(/\n/g, '<br>');
+                document.getElementById('reading').innerHTML = formattedResult;
             } catch (e) {
                 console.error('Error:', e);
                 document.getElementById('reading').innerHTML = '命运解读失败，请检查网络或稍后重试。错误信息：' + e.message;

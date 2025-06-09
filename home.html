@@ -12,10 +12,11 @@
         <!-- 标题图片 -->
         <img src="assets/image/title 2.png" alt="神秘塔罗占卜" style="display:block;margin:0 auto 2.5rem auto;max-width:480px;width:90%;height:auto;">
         <div class="mic-group">
-            <button class="mic-button" id="micButton">
+            <button class="mic-button action-button" id="micButton">
                 <i class="fas fa-microphone"></i>
             </button>
             <p class="instruction">点击麦克风开始诉说你的问题</p>
+            <p class="instruction gesture-hint">手势玩法：移动光标引导，握拳确认</p>
         </div>
         <!-- 仪式感输入框 -->
         <input type="text" class="question-input" id="questionInput" placeholder="你想问什么问题呢？" autocomplete="off">
@@ -23,6 +24,9 @@
     </div>
 
     <script src="bgm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="gesture-control.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const micButton = document.getElementById('micButton');
@@ -72,7 +76,12 @@
 
             // 初始化按钮状态
             startButton.disabled = true;
+
+            var bgmBtn = document.getElementById('bgm-toggle-btn');
+            if (bgmBtn) bgmBtn.classList.add('action-button');
         });
+
+        window.addEventListener('DOMContentLoaded',()=>{GestureControl.enable();});
     </script>
 </body>
 </html> 

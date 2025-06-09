@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽卡动画</title>
+    <link rel="stylesheet" href="draw-animation.css">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="gesture-control.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 摄像头预览窗口 - 移除，由 GestureControl 注入 -->
+        <!-- <div class="camera-preview">
+            <video id="video" autoplay playsinline></video>
+        </div> -->
+
+        <!-- 魔法阵区域 -->
+        <div class="magic-circle-container">
+            <img src="assets/image/magic-array.png" alt="大魔法阵" class="magic-circle outer">
+            <img src="assets/image/magic-array-inside.png" alt="小魔法阵" class="magic-circle inner">
+        </div>
+
+        <!-- 卡牌区域 -->
+        <div class="cards-container">
+            <!-- 卡牌将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 提示文本 -->
+        <div class="instruction-text">
+            请举起右手以驱动魔法阵
+        </div>
+
+        <div class="card-actions" style="display:none;">
+            <button id="reset-cards" class="action-button">重新选牌</button>
+            <button id="confirm-cards" class="action-button">确认</button>
+        </div>
+    </div>
+
+    <!-- 星星光标 - 移除，由 GestureControl 注入 -->
+    <!-- <div id="star-cursor"></div> -->
+
+    <div id="auto-confirm-indicator" style="display:none;">
+        <svg width="80" height="80">
+            <circle cx="40" cy="40" r="36" stroke="#ffe082" stroke-width="6" fill="none" opacity="0.5"/>
+            <circle id="auto-confirm-progress" cx="40" cy="40" r="36" stroke="#ffd54f" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2"/>
+        </svg>
+        <div style="color:#ffe082;font-size:18px;text-align:center;margin-top:4px;">张开右手悬停以确认</div>
+    </div>
+
+    <script src="draw-animation.js"></script>
+    <script src="bgm.js"></script>
+    <!-- 移除重复的 GestureControl.enable() 调用 -->
+    <!-- <script>window.addEventListener('DOMContentLoaded',()=>{GestureControl.enable();});</script> -->
+</body>
+</html> 

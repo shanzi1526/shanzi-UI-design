@@ -88,4 +88,84 @@ body {
 .action-button:not(:disabled):hover {
     box-shadow: 0 5px 20px rgba(230, 223, 206, 0.18);
     transform: translateY(-2px) scale(1.04);
+}
+
+.reading {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.reading br {
+    margin-bottom: 0.5rem;
+}
+
+/* 卡牌部分样式 */
+.reading .card-section {
+    margin-bottom: 2rem;
+}
+
+.reading .card-item {
+    margin: 1rem 0;
+    padding-left: 1rem;
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* AI分析部分样式 */
+.reading .analysis-section {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+/* 建议部分样式 */
+.reading .suggestion-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+/* 加载动画 */
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #fff;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* 错误信息样式 */
+.error-message {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .reading {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    .reading .card-item {
+        padding-left: 0.5rem;
+    }
 } 
